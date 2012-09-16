@@ -4,6 +4,7 @@
 * Ms.Vibhavee Trairattanapa 
 */
 import java.awt.*;
+
 import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -29,16 +30,17 @@ public class ProgramGUI {
 		JFrame.setDefaultLookAndFeelDecorated(false);
 		JFrame frame = new JFrame("Logistic Simulation");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setResizable(false);
+		frame.setPreferredSize(new Dimension(480,300));
 		
 		//Create Container and set to Border Layout
 		Container cp = frame.getContentPane();
-		cp.setLayout(new BorderLayout());
+		cp.setLayout(new FlowLayout());
 		
 		//Create all Text Fields
 		textBelt01 = new JTextField("Belt1",20);
 		textBelt02 = new JTextField("Belt2",20);
 		textFactory = new JTextField("Factory",20);
-		status = new JTextField("Status",20);
 		
 		//Create all JToggleButtons
 		btnBelt01 = new JToggleButton("Run Belt01");
@@ -51,23 +53,35 @@ public class ProgramGUI {
 		btnFactory.addItemListener(new ButtonListener(btnFactory,"Run Main","Stop Main",0));
 		
 		//Create Panels to put both texts and buttons in
-		JPanel panelBelt01 = new JPanel(new GridLayout(2,1,20,0));
-		JPanel panelBelt02 = new JPanel(new GridLayout(2,1,20,0));
-		JPanel panelFactory = new JPanel(new GridLayout(2,1,20,0));
+		JPanel panelBelt = new JPanel(new GridLayout(2,4,20,10));
+		JPanel panelFactory = new JPanel(new GridLayout(3,1,20,0));
+
+		JLabel topSpace = new JLabel();
+		topSpace.setPreferredSize(new Dimension(480,100));
+
+		JLabel bottomSpace = new JLabel();
+		bottomSpace.setPreferredSize(new Dimension(480,100));
+		
+		JLabel leftSpace = new JLabel();
+		leftSpace.setPreferredSize(new Dimension(50,10));
 		
 		//Add Text and Button to each panel
-		panelBelt01.add(btnBelt01);
-		panelBelt01.add(textBelt01);		
-		panelBelt02.add(btnBelt02);
-		panelBelt02.add(textBelt02);		
+		panelBelt.add(topSpace);
+		panelBelt.add(leftSpace);
+		panelBelt.add(btnBelt01);
+		panelBelt.add(btnBelt02);
+		panelBelt.add(new JLabel());
+		panelBelt.add(new JLabel());
+		panelBelt.add(textBelt01);
+		panelBelt.add(textBelt02);
 		panelFactory.add(btnFactory);
 		panelFactory.add(textFactory);
+		panelFactory.add(bottomSpace);
 		
 		//Add Panel to the Container
-		cp.add(panelBelt01,BorderLayout.WEST);
-		cp.add(panelBelt02,BorderLayout.EAST);
-		cp.add(panelFactory,BorderLayout.SOUTH);
-		cp.add(status,BorderLayout.NORTH);
+		cp.add(topSpace);
+		cp.add(panelBelt);
+		cp.add(panelFactory);
 
 		//Ready to go
         frame.pack();

@@ -16,11 +16,11 @@ public class FactoryBelt implements Runnable{
 	}
 	public synchronized void start(){
 		run = true;
-		System.out.println(Thread.currentThread().getName()+" starts");
+		//System.out.println(Thread.currentThread().getName()+" starts");
 	}
 	public synchronized void stop(){
 		run = false;
-		System.out.println(Thread.currentThread().getName()+" stops");
+		//System.out.println(Thread.currentThread().getName()+" stops");
 	}
 	public synchronized void increase(int val){
 		this.num += val;
@@ -44,24 +44,22 @@ public class FactoryBelt implements Runnable{
 				if(work){
 					this.increase(1);
 					ProgramGUI.program.setText(getNum()+"",0);
-					System.out.println(Thread.currentThread().getName()+" Factory +1 "+getNum());
+					//System.out.println(Thread.currentThread().getName()+" Factory +1 "+getNum());
 				}
 			}
 			
 			//Notify all Belts that there is item(s) available
 			synchronized(this){
-				if(getNum() > 0){
-					ProgramGUI.program.setText("Notify All",3);
+				if(run){
 					notifyAll();
-					System.out.println("Notify!");
 				}
 			}
 			
 			//Go to sleep for 100 ms
 			try {
 				if(work){
-					System.out.println(Thread.currentThread().getName()+" Sleeping");
-					Thread.sleep(1000);
+					//System.out.println(Thread.currentThread().getName()+" Sleeping");
+					Thread.sleep(100);
 				}
 			} 
 			catch (InterruptedException e) {
@@ -76,6 +74,8 @@ public class FactoryBelt implements Runnable{
 		FactoryBelt factory = new FactoryBelt(0);
 		LogisticBelt logistic1 = new LogisticBelt(0, factory, 1);
 		LogisticBelt logistic2 = new LogisticBelt(0, factory, 2);
+		
+		//Create GUI
 		ProgramGUI.program = new ProgramGUI(logistic1, logistic2, factory);
 		
 		//Create threads
