@@ -40,8 +40,10 @@ public class FactoryBelt implements Runnable{
 				else if(getNum() >= 50)
 					work = false;
 			}
-			this.increase(1);
-			program.setText(getNum()+"",0);
+			if(work){
+				this.increase(1);
+				program.setText(getNum()+"",0);
+			}
 			synchronized(this){
 				try {
 					if(work){

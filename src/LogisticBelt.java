@@ -25,12 +25,14 @@ public class LogisticBelt implements Runnable {
 	}
 	public void run(){
 		while(true){
-			if(factory.getNum() <= 0){
-				try {
-					this.wait();
-				}
-				catch (InterruptedException e) {
-					System.err.print("Error");
+			synchronized(factory){
+				if(factory.getNum() <= 0){
+					try {
+						factory.wait();
+					}
+					catch (InterruptedException e) {
+						System.err.print("Error");
+					}
 				}
 			}
 			this.increase(1);
