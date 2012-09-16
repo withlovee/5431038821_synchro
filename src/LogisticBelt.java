@@ -23,34 +23,40 @@ public class LogisticBelt implements Runnable {
 		this.num += val;
 	}
 	public void run(){
+		boolean skipSleep = false;
 		while(true){
 			synchronized(factory){
 				if(factory.getNum() <= 0){
 					try {
 						System.out.println(Thread.currentThread().getName()+" Waiting");
 						factory.wait();
+						skipSleep = true;
 					}
 					catch (InterruptedException e) {
 						System.err.print("Error");
 					}
 				}
 				else{
+					skipSleep = false;
 					this.increase(1);
 					program.setText(getNum()+"",logisticNum);
 					System.out.println(Thread.currentThread().getName()+" Belt +1 "+getNum());
 					factory.decrease(1);
 					program.setText(factory.getNum()+"",0);
 					System.out.println(Thread.currentThread().getName()+" Factory -1 "+factory.getNum());
+				}
+			}
+			synchronized(factory){
+				if(!skipSleep){
 					try {
 						System.out.println(Thread.currentThread().getName()+" Sleeping");
 						Thread.sleep(1500);
+						skipSleep = false;
 					}
 					catch (InterruptedException e) {
 						System.err.print("Error");
 					}
 				}
-			}
-			synchronized(factory){
 			}
 		}
 	}
