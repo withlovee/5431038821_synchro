@@ -27,28 +27,34 @@ public class FactoryBelt implements Runnable{
 	public void run(){
 		while(true){
 			synchronized(this){
-				if(getNum() > 0){
-					program.setText("Notify All",3);
-					notifyAll();
-				}
-			}
-			synchronized(this){
 				if(getNum() <= 30)
 					work = true;
 				else if(getNum() >= 50)
 					work = false;
 			}
-			if(work){
-				this.increase(1);
-				program.setText(getNum()+"",0);
-				System.out.println(Thread.currentThread().getName()+" Factory +1 "+getNum());
+			
+			synchronized(this){
+				if(work){
+					this.increase(1);
+					program.setText(getNum()+"",0);
+					System.out.println(Thread.currentThread().getName()+" Factory +1 "+getNum());
+				}
+			}
+			
+			synchronized(this){
+				if(getNum() > 0){
+					program.setText("Notify All",3);
+					notifyAll();
+					System.out.println("Notify!");
+				}
 			}
 			try {
 				if(work){
 					System.out.println(Thread.currentThread().getName()+" Sleeping");
 					Thread.sleep(1000);
 				}
-			} catch (InterruptedException e) {
+			} 
+			catch (InterruptedException e) {
 				System.err.print("Error");
 			}
 			
