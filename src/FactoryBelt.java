@@ -11,8 +11,8 @@ public class FactoryBelt implements Runnable{
 	public FactoryBelt(int num){
 		this.num = num;
 	}
-	public FactoryBelt(ProgramGUI program){
-		this.num = 0;
+	public FactoryBelt(int num,ProgramGUI program){
+		this.num = num;
 		this.program = program;
 	}
 	public int getNum(){
@@ -20,18 +20,14 @@ public class FactoryBelt implements Runnable{
 	}
 	public synchronized void increase(int val){
 		this.num += val;
-		program.setText(getNum()+"",0);
-		System.out.println(Thread.currentThread().getName()+" Factory +1");
 	}
 	public synchronized void decrease(int val){
 		this.num -= val;
-		program.setText(getNum()+"",0);
-		System.out.println(Thread.currentThread().getName()+" Factory -1");
 	}	
 	public void run(){
 		while(true){
 			synchronized(this){
-				if(getNum() >= 0){
+				if(getNum() > 0){
 					program.setText("Notify All",3);
 					notifyAll();
 				}
@@ -45,11 +41,12 @@ public class FactoryBelt implements Runnable{
 			if(work){
 				this.increase(1);
 				program.setText(getNum()+"",0);
+				System.out.println(Thread.currentThread().getName()+" Factory +1 "+getNum());
 			}
 			try {
 				if(work){
 					System.out.println(Thread.currentThread().getName()+" Sleeping");
-					Thread.sleep(100);
+					Thread.sleep(1000);
 				}
 			} catch (InterruptedException e) {
 				System.err.print("Error");
@@ -60,7 +57,7 @@ public class FactoryBelt implements Runnable{
 	public static void main(String[] args) {
 		
 		ProgramGUI program = new ProgramGUI();
-		FactoryBelt factory = new FactoryBelt(program);
+		FactoryBelt factory = new FactoryBelt(0,program);
 		LogisticBelt logistic1 = new LogisticBelt(0,factory,program,1);
 		LogisticBelt logistic2 = new LogisticBelt(0,factory,program,2);
 		
