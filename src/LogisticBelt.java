@@ -5,19 +5,28 @@
 */
 public class LogisticBelt implements Runnable {
 
-	int num,logisticNum;
-	boolean work;
-	FactoryBelt factory;
-	ProgramGUI program;
+	private int num,logisticNum;
+	private FactoryBelt factory;
+	//private ProgramGUI program;
+	private boolean run;
 	
-	public LogisticBelt(int num,FactoryBelt factory,ProgramGUI program, int logisticNum){
+	public LogisticBelt(int num,FactoryBelt factory, int logisticNum){
 		this.num = num;
 		this.factory = factory;
-		this.program = program;
+		//this.program = program;
 		this.logisticNum = logisticNum;
+		run = false;
 	}
 	public int getNum(){
 		return num;
+	}
+	public synchronized void start(){
+		run = true;
+		System.out.println(Thread.currentThread().getName()+" starts");
+	}
+	public synchronized void stop(){
+		run = false;
+		System.out.println(Thread.currentThread().getName()+" stops");
 	}
 	public synchronized void increase(int val){
 		this.num += val;
@@ -25,8 +34,9 @@ public class LogisticBelt implements Runnable {
 	public void run(){
 		boolean skipSleep = false;
 		while(true){
+			
 			synchronized(factory){
-				if(factory.getNum() <= 0){
+				if(factory.getNum() <= 0 || !run){
 					try {
 						System.out.println(Thread.currentThread().getName()+" Waiting");
 						factory.wait();
@@ -39,10 +49,10 @@ public class LogisticBelt implements Runnable {
 				else{
 					skipSleep = false;
 					this.increase(1);
-					program.setText(getNum()+"",logisticNum);
+					ProgramGUI.program.setText(getNum()+"",logisticNum);
 					System.out.println(Thread.currentThread().getName()+" Belt +1 "+getNum());
 					factory.decrease(1);
-					program.setText(factory.getNum()+"",0);
+					ProgramGUI.program.setText(factory.getNum()+"",0);
 					System.out.println(Thread.currentThread().getName()+" Factory -1 "+factory.getNum());
 				}
 			}
