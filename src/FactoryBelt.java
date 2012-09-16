@@ -21,10 +21,12 @@ public class FactoryBelt implements Runnable{
 	public synchronized void increase(int val){
 		this.num += val;
 		program.setText(getNum()+"",0);
+		System.out.println(Thread.currentThread().getName()+" Factory +1");
 	}
 	public synchronized void decrease(int val){
 		this.num -= val;
 		program.setText(getNum()+"",0);
+		System.out.println(Thread.currentThread().getName()+" Factory -1");
 	}	
 	public void run(){
 		while(true){
@@ -44,15 +46,15 @@ public class FactoryBelt implements Runnable{
 				this.increase(1);
 				program.setText(getNum()+"",0);
 			}
-			synchronized(this){
-				try {
-					if(work){
-						Thread.sleep(100);
-					}
-				} catch (InterruptedException e) {
-					System.err.print("Error");
+			try {
+				if(work){
+					System.out.println(Thread.currentThread().getName()+" Sleeping");
+					Thread.sleep(100);
 				}
+			} catch (InterruptedException e) {
+				System.err.print("Error");
 			}
+			
 		}
 	}
 	public static void main(String[] args) {

@@ -22,22 +22,25 @@ public class LogisticBelt implements Runnable {
 	public synchronized void increase(int val){
 		this.num += val;
 		program.setText(getNum()+"",logisticNum);
+		System.out.println(Thread.currentThread().getName()+" Belt +1");
 	}
 	public void run(){
 		while(true){
 			synchronized(factory){
 				if(factory.getNum() <= 0){
 					try {
+						System.out.println(Thread.currentThread().getName()+" Waiting");
 						factory.wait();
 					}
 					catch (InterruptedException e) {
 						System.err.print("Error");
 					}
 				}
+				this.increase(1);
+				factory.decrease(1);
 			}
-			this.increase(1);
-			factory.decrease(1);
 			try {
+				System.out.println(Thread.currentThread().getName()+" Sleeping");
 				Thread.sleep(150);
 			}
 			catch (InterruptedException e) {
